@@ -1,0 +1,24 @@
+/* print.css - Devis Print Styles */
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    #devis, #devis * {
+        visibility: visible;
+    }
+    
+    #devis {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    
+    /* Hide specific non-printable elements within devis if needed */
+    #devis button,
+    .no-print {
+        display: none !important;
+    }
+}
