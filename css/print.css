@@ -1,24 +1,90 @@
-/* print.css - Devis Print Styles */
+/* print.css — Devis print styles (A4)
+   Only the devis document panel is printed.
+   Everything else — nav, form, buttons — is hidden.
+*/
 
 @media print {
-    body * {
-        visibility: hidden;
-    }
-    
-    #devis, #devis * {
-        visibility: visible;
-    }
-    
-    #devis {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-    }
-    
-    /* Hide specific non-printable elements within devis if needed */
-    #devis button,
-    .no-print {
+    /* Reset and hide all main layout elements */
+    header, footer, nav, .hero-section, #services, #alucobond, #websites, #contact, .no-print, .devis-actions, .mobile-menu-btn, .skip-to-content {
         display: none !important;
+    }
+
+    /* Reset body and main for print */
+    body, html {
+        background: #fff !important;
+        color: #000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
+
+    main {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Hide the devis form and other controls within the devis section */
+    #devis {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #devis .container {
+        max-width: none !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    #devis .section-title,
+    .devis-form-container {
+        display: none !important;
+    }
+
+    /* Ensure devis-document is the only thing visible and fills the page */
+    #devis-document {
+        display: block !important;
+        visibility: visible !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 10mm !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 11pt !important;
+    }
+
+    /* Table styles for print */
+    .devis-table {
+        width: 100% !important;
+        border: 1px solid #000 !important;
+    }
+
+    .devis-table th {
+        background: #eee !important;
+        color: #000 !important;
+        border-bottom: 2px solid #000 !important;
+    }
+
+    .devis-table td {
+        border-bottom: 1px solid #ddd !important;
+        color: #000 !important;
+    }
+
+    /* Page setup */
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    /* Typography and color adjustments */
+    #devis-document h3 { color: #8B2635 !important; }
+    .total-ttc { color: #8B2635 !important; }
+    
+    /* Force high contrast for text */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }

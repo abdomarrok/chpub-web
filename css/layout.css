@@ -160,7 +160,7 @@ section {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
     gap: var(--space-xl);
-    align-items: center;
+    align-items: stretch;
     margin-bottom: var(--space-xl);
 }
 
@@ -173,6 +173,7 @@ section {
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     border: 1px solid var(--border);
+    display: flex;
 }
 
 #three-container {

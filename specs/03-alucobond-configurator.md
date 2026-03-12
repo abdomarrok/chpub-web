@@ -1,17 +1,20 @@
 # 03 Alucobond Configurator
 
 ## Implémentation réalisée
-- **Contrôles Actifs** : Formulaire utilisant des inputs natifs `<input type="range">` liés directement aux événements "input".
-- **Three.js Minimaliste** :
-  - Création de `three-scene.js`. 
-  - Utilise `BoxGeometry` et `MeshStandardMaterial` simulé (Bordeaux métallique). 
-  - Interpolation linéaire (Lerp) appliquée entre les changements de taille en X et Y pour une redimensionnement doux et non brusque.
-  - OrbitControls inséré de façon asynchrone (lazy load addon).
-- **Calculs** : Surface (m²), options (pourcentage ou fixes), calculs finaux lus instantanément depuis `config.js` et mis à jour via le DOM. 
+- **Architecture Native CSS 3D** : 
+  - Abandon de Three.js au profit de transformations CSS 3D natives pour une performance instantanée (0ms load path).
+  - Utilisation de `preserve-3d` sur le conteneur et transformations `rotate`, `translateZ` pour construire un volume 3D interactif.
+- **Interaction Avancée** :
+  - **Tilt Dynamique** : Interaction au mouvement de souris permettant une sensation de profondeur et de reflet métallique sans freeze.
+  - **Auto-Scaling** : Le panneau s'ajuste visuellement dans son conteneur tout en conservant les proportions saisies.
+  - **Labels Overlays** : Affichage des dimensions (W, H) via des overlays CSS sombres et élégants.
+- **Contrôles Hybrides** :
+  - Synchronisation bidirectionnelle entre les `range sliders` et les `number inputs` manuels.
 
 ## Décisions et raisons
-- **Performance Three.js** : J'ai abaissé le `devicePixelRatio` maximum à 2 via `Math.min(window.devicePixelRatio, 2)` pour garantir la fluidité sur les appareils mobiles de milieu et bas de gamme.
-- Les dimensions sont affichées dans une superposition HTML (`.dimension-overlay`) plutôt qu'en géométrie de texte 3D Three.js afin d'éviter le poids de la police JSON à charger en 3D.
+- **Performance** : Le CSS 3D évite le parsing de shaders 3D et le chargement de bibliothèques lourdes, ce qui est crucial pour les utilisateurs mobiles en Algérie.
+- **UX** : L'ajout de l'entrée manuelle (clavier) compense l'imprécision des sliders sur de grandes dimensions (ex: 12.5m).
+- **Rendu Visuel** : Utilisation de gradients CSS et de pseudo-éléments `::before` pour simuler un reflet métallique dynamique ("Metalic Shine") qui suit la souris.
 
-## Écarts par rapport au prompt strict
-- Aucun. L'expérience est conforme et performante.
+## Écarts par rapport au prompt initial
+- **Extension 3D** : Le projet a évolué d'un configurateur 2D (Panneau plat) vers un configurateur de Volume 3D complet pour mieux répondre aux besoins de pose (faces latérales).

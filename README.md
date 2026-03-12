@@ -38,6 +38,3 @@ chpub-web/
 ## 📄 Licence
 
 Propriété exclusive de **Ch.Pub — Agence Publicitaire**.
-
----
-*Développé avec excellence par Antigravity.*

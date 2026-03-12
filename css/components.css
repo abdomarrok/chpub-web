@@ -356,6 +356,38 @@
     align-items: center;
     justify-content: center;
     background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+}
+
+.css-3d-scene:active {
+    cursor: grabbing;
+}
+
+/* ── Scene Floor/Lighting ── */
+.css-3d-scene::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ── Floor Shadow ── */
+.panel-shadow {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%) rotateX(90deg);
+    width: 90%;
+    height: 50px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, transparent 70%);
+    filter: blur(15px);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .alu-panel-css {
@@ -365,13 +397,29 @@
     transform-style: preserve-3d;
     transform: rotateX(15deg) rotateY(-25deg);
     transition: transform 0.1s ease-out;
+    /* Reflection highlight variable controlled by JS */
+    --shine-x: 50%;
+    --shine-y: 50%;
 }
 
 .panel-face {
     position: absolute;
     background: var(--primary);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
     box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+}
+
+/* Metallic material logic */
+.panel-face.front::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle at var(--shine-x) var(--shine-y),
+        rgba(255,255,255,0.25) 0%,
+        transparent 60%
+    );
+    pointer-events: none;
 }
 
 /* Base dimensions are overridden by JS */
@@ -393,23 +441,303 @@
     pointer-events: none;
 }
 
-.panel-dimension-label-w {
+.panel-dimension-label-w,
+.panel-dimension-label-h,
+.panel-dimension-label-d {
     position: absolute;
-    bottom: -30px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--accent);
-    background: rgba(0,0,0,0.7);
-    padding: 2px 8px;
+    background: rgba(13, 13, 13, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 4px 10px;
     border-radius: 4px;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.panel-dimension-label-w {
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .panel-dimension-label-h {
-    position: absolute;
-    left: -60px;
-    transform: rotate(-90deg);
-    font-size: 0.8rem;
-    color: var(--accent);
-    background: rgba(0,0,0,0.7);
-    padding: 2px 8px;
+    left: -70px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+}
+
+.panel-dimension-label-d {
+    right: -45px;
+    top: 50%;
+    transform: translateY(-50%) translateZ(-50px);
+    font-size: 0.65rem;
+    opacity: 0.8;
+}
+
+
+/* ================================================================
+   ADDITIONS — Missing styles for configurator, forms, toggles
+   ================================================================ */
+
+/* ── Form group ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.label-with-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.num-input {
+    width: 80px;
+    background: var(--dark-3);
+    border: 1px solid var(--border);
     border-radius: 4px;
+    color: var(--accent);
+    padding: 4px 8px;
+    font-family: var(--font-arabic);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.num-input:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 10px rgba(201, 168, 76, 0.2);
+}
+
+/* Hide spin buttons */
+.num-input::-webkit-outer-spin-button,
+.num-input::-webkit-inner-spin-button {
+    appearance: none;
+    -webkit-appearance: none;
+    margin: 0;
+}
+.num-input[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--light-muted, #C8C8C0);
+    letter-spacing: 0.04em;
+}
+
+.form-group input[type="range"] {
+    width: 100%;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.form-group select,
+.devis-form select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--dark-3);
+    color: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+    transition: border-color 150ms ease;
+}
+
+.form-group select:focus,
+.devis-form select:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.form-group select option,
+.devis-form select option {
+    background: var(--dark-3);
+    color: var(--light);
+}
+
+/* ── Toggle switch ── */
+.toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+}
+
+.toggle-label {
+    font-size: 0.875rem;
+    color: var(--light-muted, #C8C8C0);
+    user-select: none;
+}
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--dark-3, #252525);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 150ms ease, border-color 150ms ease;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background: #888;
+    border-radius: 50%;
+    transition: left 150ms ease, background 150ms ease;
+}
+
+.toggle input:checked + .toggle-slider {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.toggle input:checked + .toggle-slider::before {
+    left: calc(100% - 19px);
+    background: var(--light);
+}
+
+/* ── Price calculator box ── */
+.price-calculator {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.calc-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.calc-details span {
+    color: var(--light);
+    font-weight: 600;
+}
+
+.calc-total {
+    text-align: right;
+}
+
+.calc-total p:first-child {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+}
+
+.total-amount {
+    font-family: var(--font-arabic, 'Cairo', sans-serif);
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--accent);
+}
+
+/* ── Config actions ── */
+.config-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+}
+
+/* ── Nav scrolled state ── */
+.site-header.scrolled {
+    background: rgba(13, 13, 13, 0.98);
+    box-shadow: 0 1px 0 var(--border);
+}
+
+/* ── CSS 3D Panel: base position for JS-driven faces ── */
+.alu-panel-css {
+    /* width and height set by JS */
+    width: 275px;
+    height: 110px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(15deg) rotateY(-25deg);
+    transition: width 0.2s ease, height 0.2s ease;
+}
+
+.panel-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* width/height set by JS for side/top/bottom faces */
+}
+
+.panel-face.front {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+}
+
+.panel-face.back {
+    width: 100%;
+    height: 100%;
+    background: var(--dark-3);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.panel-face.right,
+.panel-face.left {
+    background: var(--primary-dark);
+    border: 1px solid rgba(0,0,0,0.3);
+}
+
+.panel-face.top,
+.panel-face.bottom {
+    background: #3a0f18;
+    border: 1px solid rgba(0,0,0,0.3);
 }
