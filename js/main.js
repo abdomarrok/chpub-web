@@ -1,9 +1,23 @@
-/* main.js — Nav, Scroll, IntersectionObserver, Contact populate
-   Plain script — no ES module. CONFIG is global from config.js.
-*/
+/**
+ * main.js — Navigation, Scroll Events, IntersectionObserver, Contact Population
+ * Plain script — no ES module. CONFIG is global from config.js.
+ *
+ * Responsibilities:
+ * - Mobile menu toggle with accessibility
+ * - Header scroll effect (background blur)
+ * - Intersection observer for reveal animations
+ * - Populate contact header/footer from CONFIG
+ * - Social link visibility based on CONFIG
+ */
 
 'use strict';
 
+/**
+ * Debounce function to limit function execution frequency
+ * @param {Function} fn - Function to debounce
+ * @param {number} ms - Debounce delay in milliseconds
+ * @returns {Function} Debounced function
+ */
 function debounce(fn, ms) {
     let t;
     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
@@ -54,7 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ── Populate contact from CONFIG ── */
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    /**
+     * Set text content of an element by ID
+     * @param {string} id - Element ID
+     * @param {string|number} val - Value to set as textContent
+     */
+    const set = (id, val) => { 
+        const el = document.getElementById(id); 
+        if (el) el.textContent = val; 
+    };
 
     set('contact-address', CONFIG.agency.address);
     set('contact-phone1',  CONFIG.agency.phone1);

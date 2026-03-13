@@ -1,6 +1,14 @@
-/* websites.js — Website package builder + addon logic
-   Plain script — no ES module. CONFIG is global from config.js.
-*/
+/**
+ * websites.js — Website Package Selection, Addon System, Devis Integration
+ * Plain script — no ES module. CONFIG is global from config.js.
+ *
+ * Responsibilities:
+ * - Render website package cards (Vitrine, E-Commerce, Sur Mesure)
+ * - Manage addon selections with price calculation
+ * - Live total price updates
+ * - Integration with devis system via DevisManager
+ * - Accessible radio-button and checkbox patterns
+ */
 
 'use strict';
 
@@ -16,7 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedPackage = null;
     const selectedAddons = new Set();
 
-    /* ── Feature lists ── */
+    /* ── Feature lists for package comparison ── */
+    /**
+     * Feature comparison for each website package type
+     * @type {Object<string, Array<{text: string, inc: boolean}>>}
+     */
     const FEATURES = {
         vitrine: [
             { text: "Design personnalisé",     inc: true  },
@@ -120,6 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ── Calculate and render totals ── */
+    /**
+     * Update total price based on selected package and addons
+     * Updates display and enables/disables devis button
+     * Calls DevisManager if available
+     */
     function updateTotals() {
         if (!selectedPackage) {
             if (btnGenerate) btnGenerate.disabled = true;
@@ -152,23 +169,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Expose for devis.js
         const addonStr = addonLabels.length ? `\n  Options: ${addonLabels.join(', ')}` : '';
+        const totalPrice = pkgData.price !== null ? basePrice + optionsPrice : 0;
+        
         window.currentWebConfig = {
             details: `Site Web — ${pkgData.label}${addonStr}`,
-            price: pkgData.price !== null ? basePrice + optionsPrice : 0
+            price: Math.round(totalPrice)
         };
     }
 
     /* ── Devis button ── */
+    /**
+     * Generate devis from website configuration
+     * Calls DevisManager to populate devis form and scroll to it
+     */
     if (btnGenerate) {
         btnGenerate.addEventListener('click', () => {
-            updateTotals();
-            if (window.DevisManager && window.currentWebConfig) {
-                window.DevisManager.setWebsites(
-                    window.currentWebConfig.details,
-                    window.currentWebConfig.price
-                );
+            try {
+                updateTotals();
+                if (window.DevisManager && window.currentWebConfig) {
+                    window.DevisManager.setWebsites(
+                        window.currentWebConfig.details,
+                        window.currentWebConfig.price
+                    );
+                }
+                const devisSection = document.getElementById('devis');
+                if (devisSection) {
+                    devisSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            } catch (err) {
+                console.error('Error generating devis:', err);
             }
-            document.getElementById('devis')?.scrollIntoView({ behavior: 'smooth' });
         });
     }
 });

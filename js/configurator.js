@@ -1,10 +1,17 @@
-/* configurator.js — Alucobond 3D CSS panel + price calculator
-   Plain script — no ES module. CONFIG is global from config.js.
-
-   CSS 3D approach: drives width/height of .alu-panel-css directly.
-   Each face is positioned via CSS transform; only the container
-   dimensions change — no scale3d distortion.
-*/
+/**
+ * configurator.js — Alucobond 3D CSS Panel + Price Calculator
+ * Plain script — no ES module. CONFIG is global from config.js.
+ *
+ * CSS 3D approach: drives width/height of .alu-panel-3d directly.
+ * Each face is positioned via CSS transform; only container dimensions change.
+ * 
+ * Features:
+ * - Hybrid input system (Range sliders + Manual number inputs)
+ * - 3D panel geometry with 6 faces
+ * - Real-time price calculation with surface area
+ * - Drag-to-rotate interaction with auto-spin
+ * - Input validation and clamping
+ */
 
 'use strict';
 
@@ -34,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const faceTop    = aluPanel?.querySelector('.panel-face.top');
     const faceBottom = aluPanel?.querySelector('.panel-face.bottom');
     const faceBack   = aluPanel?.querySelector('.panel-face.back');
-    // REMOVED old dimW/dimH refs as they are moved up
 
     // Price output
     const calcSurface = document.getElementById('calc-surface');
@@ -43,8 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const calcTotal   = document.getElementById('calc-total');
 
     // Scale: pixels per metre in the CSS panel display
-    const PX_PER_M_W = 55; // horizontal
-    const PX_PER_M_H = 55; // vertical
     const PX_PER_M_D = 200; // depth (exaggerated for visibility)
 
     /* ── Populate type select from CONFIG ── */
@@ -57,9 +61,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ── Update 3D panel geometry ── */
+    /**
+     * Update 3D panel geometry and transforms
+     * @param {number} wM - Width in metres
+     * @param {number} hM - Height in metres  
+     * @param {number} dM - Depth in metres
+     */
     function updatePanel(wM, hM, dM) {
-        if (!aluPanel || !scene) return;
+        if (!aluPanel) return;
+        
+        const scene = document.querySelector('.css-3d-scene');
+        if (!scene) return;
 
         // Dynamic Scale: Calculate how many pixels per metre to fit the scene
         const sceneRect = scene.getBoundingClientRect();
@@ -67,22 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxW = sceneRect.width - padding * 2;
         const maxH = sceneRect.height - padding * 2;
         
-        // We want the panel to fit comfortably. We'll use the smaller scale factor.
+        // Use the smaller scale factor to fit within scene
         const scaleW = maxW / wM;
         const scaleH = maxH / hM;
         const dynamicPX = Math.min(scaleW, scaleH, 100); // Caps at 100px/m for very small panels
         
         const wPx = Math.round(wM * dynamicPX);
         const hPx = Math.round(hM * dynamicPX);
-        const dPx = Math.round(dM * PX_PER_M_D); // Keep depth somewhat exaggerated for depth feel
+        const dPx = Math.round(dM * PX_PER_M_D);
         const halfD = dPx / 2;
 
         // Set container size
         aluPanel.style.width  = wPx + 'px';
         aluPanel.style.height = hPx + 'px';
-        
-        // Ensure proper centering by offsetting the whole group
-        // CSS transform-origin is usually center center, so we just set the size.
 
         // Front and back faces (translateZ) depend on half-depth
         const front = aluPanel.querySelector('.panel-face.front');
@@ -120,16 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
             faceBottom.style.transform = `rotateX(-90deg) translateZ(${halfD}px)`;
         }
 
-        // Dimension labels - adjust offsets based on dynamic scale
+        // Dimension labels
         if (dimW) dimW.textContent = wM.toFixed(1);
         if (dimH) dimH.textContent = hM.toFixed(1);
         if (dimD) dimD.textContent = dM.toFixed(2);
-
-        // Update depth label position
-        const labelD = document.querySelector('.panel-dimension-label-d');
-        if (labelD) {
-            labelD.style.transform = `translateY(-50%) translateZ(${halfD + 10}px) translateX(${halfD + 10}px) rotateY(90deg)`;
-        }
 
         // Update shadow size relative to panel
         const shadow = document.querySelector('.panel-shadow');
@@ -139,60 +142,82 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* ── Price calculation ── */
+    /**
+     * Calculate and update price based on dimensions and options
+     * @returns {Object|null} {w, h, d} dimensions if valid, null otherwise
+     */
     function updatePrice() {
-        if (!widthInput || !heightInput || !depthInput || !typeSelect) return;
+        if (!widthInput || !heightInput || !depthInput || !typeSelect) return null;
 
-        const w        = parseFloat(widthInput.value)  || 0;
-        const h        = parseFloat(heightInput.value) || 0;
-        const d        = parseFloat(depthInput.value)  || 0;
-        const typeKey  = typeSelect.value;
-        const typeData = CONFIG.alucobond.types[typeKey];
-        if (!typeData) return;
+        try {
+            // Clamp values to valid ranges
+            const w = Math.max(0.1, Math.min(50, parseFloat(widthInput.value) || 0));
+            const h = Math.max(0.1, Math.min(50, parseFloat(heightInput.value) || 0));
+            const d = Math.max(0.01, Math.min(10, parseFloat(depthInput.value) || 0));
+            
+            // Sync number inputs to range inputs
+            if (widthNum) widthNum.value = w;
+            if (heightNum) heightNum.value = h;
+            if (depthNum) depthNum.value = d;
+            
+            const typeKey = typeSelect.value;
+            const typeData = CONFIG.alucobond.types[typeKey];
+            if (!typeData) {
+                console.error('Invalid Alucobond type:', typeKey);
+                return null;
+            }
 
-        // NEW 3D Surface Calculation:
-        // Front face + Two sides + Top/Bottom + Back Face (optional)
-        const frontArea = w * h;
-        const sidesArea = 2 * (d * h) + 2 * (w * d);
-        const backArea  = backCheck?.checked ? (w * h) : 0;
-        const surface   = frontArea + sidesArea + backArea;
+            // 3D Surface Calculation: Front + Sides + Top/Bottom + Back (optional)
+            const frontArea = w * h;
+            const sidesArea = 2 * (d * h) + 2 * (w * d);
+            const backArea = backCheck?.checked ? (w * h) : 0;
+            const surface = Math.max(0.1, frontArea + sidesArea + backArea);
 
-        const unitPrice = typeData.price;
-        const baseTotal = surface * unitPrice;
+            const unitPrice = typeData.price;
+            if (!Number.isFinite(unitPrice) || unitPrice < 0) {
+                console.error('Invalid unit price:', unitPrice);
+                return null;
+            }
+            
+            const baseTotal = surface * unitPrice;
 
-        let optionsPrice = 0;
-        if (installCheck?.checked) {
-            optionsPrice += baseTotal * CONFIG.alucobond.options.installation.rate;
+            let optionsPrice = 0;
+            if (installCheck?.checked) {
+                const installRate = CONFIG.alucobond.options.installation.rate;
+                optionsPrice += Math.round(baseTotal * Math.max(0, Math.min(1, installRate)));
+            }
+            if (designCheck?.checked) {
+                const designFixed = CONFIG.alucobond.options.design.fixed;
+                optionsPrice += Math.max(0, designFixed);
+            }
+
+            const totalHT = Math.round(baseTotal + optionsPrice);
+
+            // Update UI
+            if (calcSurface) calcSurface.textContent = surface.toFixed(2);
+            if (calcUnit)    calcUnit.textContent    = unitPrice.toLocaleString('fr-DZ');
+            if (calcOptions) calcOptions.textContent = Math.round(optionsPrice).toLocaleString('fr-DZ');
+            if (calcTotal)   calcTotal.textContent   = totalHT.toLocaleString('fr-DZ');
+
+            // Expose for devis.js
+            window.currentAluConfig = {
+                details: `Alucobond ${typeData.label} (${w.toFixed(1)}m × ${h.toFixed(1)}m × ${d.toFixed(2)}m)` +
+                         (backCheck?.checked ? ' + Face arrière' : '') +
+                         (installCheck?.checked ? ' + Installation' : '') +
+                         (designCheck?.checked ? ' + Conception graphique' : ''),
+                price: totalHT
+            };
+
+            return { w, h, d };
+        } catch (err) {
+            console.error('Error calculating price:', err);
+            return null;
         }
-        if (designCheck?.checked) {
-            optionsPrice += CONFIG.alucobond.options.design.fixed;
-        }
-
-        const totalHT = baseTotal + optionsPrice;
-
-        // Update display (syncing number inputs)
-        if (widthNum)  widthNum.value  = w.toFixed(1);
-        if (heightNum) heightNum.value = h.toFixed(1);
-        if (depthNum)  depthNum.value  = d.toFixed(2);
-        
-        if (calcSurface) calcSurface.textContent = surface.toFixed(2);
-        if (calcUnit)    calcUnit.textContent    = unitPrice.toLocaleString('fr-DZ');
-        if (calcOptions) calcOptions.textContent = Math.round(optionsPrice).toLocaleString('fr-DZ');
-        if (calcTotal)   calcTotal.textContent   = Math.round(totalHT).toLocaleString('fr-DZ');
-
-        // Expose for devis.js
-        window.currentAluConfig = {
-            details: `Alucobond ${typeData.label} (${w.toFixed(1)}m × ${h.toFixed(1)}m × ${d.toFixed(2)}m)` +
-                     (backCheck?.checked    ? ' + Face arrière' : '') +
-                     (installCheck?.checked ? ' + Installation' : '') +
-                     (designCheck?.checked  ? ' + Conception graphique' : ''),
-            price: totalHT
-        };
-
-        return { w, h, d };
     }
 
-    /* ── Combined update ── */
+    /**
+     * Combined update: price calculation + 3D panel rendering
+     */
     function update() {
         const result = updatePrice();
         if (result) updatePanel(result.w, result.h, result.d);
@@ -204,7 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRotX = 15, currentRotY = -25;
     let isDragging = false;
     let startX, startY;
-    let autoRotateAngle = 0;
 
     if (scene && aluPanel) {
         scene.addEventListener('mousedown', (e) => {
@@ -224,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     aluPanel.style.setProperty('--shine-y', `${(yIn + 0.5) * 100}%`);
                 }
                 return;
-            };
+            }
 
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
@@ -246,11 +270,11 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = false;
         });
 
-        // Loop for smooth "Lerp" animation
+        // Animation loop for smooth rotation
         function animateScene() {
             // Idle rotation when not interacting
             if (!isDragging) {
-                targetRotY += 0.1; // Gentle constant spin
+                targetRotY += 0.1;
             }
 
             // Lerp (smooth follow)
@@ -263,40 +287,46 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animateScene);
     }
 
-    /* ── Events ── */
-    const inputs = [widthInput, heightInput, depthInput, typeSelect, installCheck, designCheck, backCheck];
-    const numInputs = [widthNum, heightNum, depthNum];
+    /* ── Events: Range + Number input sync ── */
+    const rangeSlidePairs = [
+        { range: widthInput, num: widthNum, min: 0.1, max: 50 },
+        { range: heightInput, num: heightNum, min: 0.1, max: 50 },
+        { range: depthInput, num: depthNum, min: 0.01, max: 10 }
+    ];
 
-    inputs.forEach(el => {
-        el?.addEventListener('input', () => {
-            // Slider to Number sync is handled inside updatePrice
+    rangeSlidePairs.forEach(({ range, num, min, max }) => {
+        if (!range || !num) return;
+
+        // Range slider → number input
+        range.addEventListener('input', () => {
+            const val = parseFloat(range.value) || min;
+            num.value = Math.max(min, Math.min(max, val));
+            update();
+        });
+
+        // Number input → range slider
+        num.addEventListener('input', () => {
+            let val = parseFloat(num.value) || min;
+            val = Math.max(min, Math.min(max, val));
+            range.value = val;
+            update();
+        });
+
+        // Validate on blur
+        num.addEventListener('blur', () => {
+            let val = parseFloat(num.value) || min;
+            if (!Number.isFinite(val) || val < min) val = min;
+            if (val > max) val = max;
+            num.value = val;
+            range.value = val;
             update();
         });
     });
 
-    numInputs.forEach((num, idx) => {
-        if (!num) return;
-        num.addEventListener('input', () => {
-            const range = inputs[idx];
-            if (range) {
-                // Number to Slider sync
-                let val = parseFloat(num.value);
-                const min = parseFloat(range.min);
-                const max = parseFloat(range.max);
-                
-                // Clamp value for valid range input
-                if (val < min) val = min;
-                if (val > max) val = max;
-                
-                range.value = val;
-            }
-            update();
-        });
-        
-        // Final validation on blur
-        num.addEventListener('blur', () => {
-             update(); 
-        });
+    // Other inputs
+    const otherInputs = [typeSelect, installCheck, designCheck, backCheck];
+    otherInputs.forEach(el => {
+        el?.addEventListener('change', update);
     });
 
     /* ── Devis button: scroll + expose data ── */

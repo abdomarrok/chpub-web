@@ -1,12 +1,25 @@
-/* devis.js — Devis form, live preview, print, WhatsApp
-   Plain script — no ES module. CONFIG is global from config.js.
-*/
+/**
+ * devis.js — Live Devis Generator, Export, and WhatsApp Integration
+ * Plain script — no ES module. CONFIG is global from config.js.
+ *
+ * Responsibilities:
+ * - Devis form with client/service data
+ * - Live preview of devis document (HTML table)
+ * - PDF print export (native browser print)
+ * - WhatsApp message generation and sharing
+ * - Receives data from configurator.js and websites.js
+ */
 
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ── Populate wilaya select from CONFIG ── */
+    /**
+     * Algerian wilayas (administrative divisions)
+     * All 58 wilayas ID and name pairs
+     * @type {string[]}
+     */
     const wilayas = [
         "01 - Adrar","02 - Chlef","03 - Laghouat","04 - Oum El Bouaghi","05 - Batna",
         "06 - Béjaïa","07 - Biskra","08 - Béchar","09 - Blida","10 - Bouira",
@@ -33,7 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ── Static devis header from CONFIG ── */
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    /**
+     * Set text content of an element by ID
+     * @param {string} id - Element ID
+     * @param {string|number} val - Value to set as textContent
+     */
+    const set = (id, val) => { 
+        const el = document.getElementById(id); 
+        if (el) el.textContent = val; 
+    };
     set('prev-agency-name',    CONFIG.agency.name.split('—')[0].trim());
     set('prev-agency-address', CONFIG.agency.address);
     set('prev-agency-phone',   `Tél: ${CONFIG.agency.phone1}`);
@@ -54,14 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const sInput     = document.getElementById('dev-service');
     const notesInput = document.getElementById('dev-notes');
 
-    // Hidden inputs carrying configured prices
+    // Hidden inputs carrying configured prices from configurator.js and websites.js
     const hidAluD = document.getElementById('hidden-alu-details');
     const hidAluP = document.getElementById('hidden-alu-price');
     const hidWebD = document.getElementById('hidden-web-details');
     const hidWebP = document.getElementById('hidden-web-price');
 
-    /* ── DevisManager: called by configurator.js and websites.js ── */
+    /**
+     * Global DevisManager object for inter-module communication
+     * Called by configurator.js and websites.js to pass data to devis form
+     */
     window.DevisManager = {
+        /**
+         * Set Alucobond service details and price
+         * @param {string} details - Service description
+         * @param {number} price - Total price in DZD
+         */
         setAlucobond(details, price) {
             if (hidAluD) hidAluD.value = details;
             if (hidAluP) hidAluP.value = price;
@@ -69,6 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sInput) sInput.value = hasWeb ? 'Mixte' : 'Alucobond';
             updatePreview();
         },
+        /**
+         * Set Website service details and price
+         * @param {string} details - Service description
+         * @param {number} price - Total price in DZD
+         */
         setWebsites(details, price) {
             if (hidWebD) hidWebD.value = details;
             if (hidWebP) hidWebP.value = price;
@@ -77,6 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePreview();
         }
     };
+
+    /**
+     * Update devis preview with current form data
+     * Regenerates table rows and calculates totals from current state
+     */
 
     /* ── Live preview update ── */
     function updatePreview() {

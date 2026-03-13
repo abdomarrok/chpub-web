@@ -20,10 +20,36 @@
 
 /* Hero Typography */
 .hero-logo svg {
-    width: 80px;
-    height: 80px;
-    color: var(--accent);
+    width: 250px;
+    height: 200px;
     margin-bottom: var(--space-md);
+    filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.4));
+    overflow: visible;
+}
+
+.chpub-logo {
+    width: 80px;
+    height: 64px;
+    transition: transform var(--transition-fast);
+    overflow: visible;
+}
+
+.logo-container:hover .chpub-logo {
+    transform: scale(1.05);
+}
+
+.logo-outer {
+    stroke-dasharray: 250;
+    stroke-dashoffset: 0;
+    transition: all 0.5s ease;
+}
+
+.logo-container:hover .logo-outer {
+    stroke-dashoffset: 20;
+}
+
+.logo-pub {
+    opacity: 0.8;
 }
 .agency-name {
     font-size: 1.2rem;

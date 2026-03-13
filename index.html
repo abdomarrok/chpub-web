@@ -90,7 +90,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: var(--space-md) var(--space-xl);
+            padding: var(--space-sm) var(--space-xl);
             z-index: 1000;
             background: rgba(13, 13, 13, 0.9);
             backdrop-filter: blur(10px);
@@ -188,10 +188,56 @@
 
     <header class="site-header" role="banner">
         <a href="#" class="logo-container" aria-label="Accueil Ch.Pub">
-            <!-- Circular lowercase "b" letter mark SVG -->
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-                <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="4"/>
-                <path d="M40 25 V75 A15 15 0 0 0 70 60 A15 15 0 0 0 40 45" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+            <svg class="chpub-logo" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" style="overflow: visible;">
+                <defs>
+                    <linearGradient id="goldGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#8B6914" />
+                        <stop offset="35%" stop-color="#D4AF37" />
+                        <stop offset="50%" stop-color="#FAEBB2" />
+                        <stop offset="65%" stop-color="#D4AF37" />
+                        <stop offset="100%" stop-color="#8B6914" />
+                    </linearGradient>
+
+                    <path id="logo-C" d="M 144 45 
+                             A 65 65 0 1 0 144 115 
+                             A 13 13 0 0 1 118 115 
+                             A 45 45 0 1 1 118 45 
+                             A 13 13 0 0 1 144 45 Z" />
+
+                    <path id="logo-h" d="M 56 108 
+                             L 56 42 
+                             A 7 7 0 0 1 70 42 
+                             L 70 60 
+                             C 70 45, 108 45, 108 65 
+                             L 108 108 
+                             A 7 7 0 0 1 94 108 
+                             L 94 65 
+                             C 94 55, 70 55, 70 70 
+                             L 70 108 
+                             A 7 7 0 0 1 56 108 Z" />
+
+                    <g id="logo-pub">
+                        <text x="148" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">p</text>
+                        <text x="148" y="87" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">u</text>
+                        <text x="148" y="112" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">b</text>
+                    </g>
+                </defs>
+
+                <g transform="translate(0, 8)">
+                    <g transform="translate(16, -16)" fill="none" stroke-width="0.8" opacity="0.15">
+                        <use href="#logo-C" stroke="url(#goldGradient)" />
+                        <use href="#logo-h" stroke="url(#goldGradient)" />
+                        <use href="#logo-pub" stroke="#FFFFFF" />
+                    </g>
+                    <g transform="translate(8, -8)" fill="none" stroke-width="1.2" opacity="0.2">
+                        <use href="#logo-C" stroke="url(#goldGradient)" />
+                        <use href="#logo-h" stroke="url(#goldGradient)" />
+                        <use href="#logo-pub" stroke="#FFFFFF" />
+                    </g>
+                    <use href="#logo-C" fill="url(#goldGradient)" />
+                    <use href="#logo-h" fill="url(#goldGradient)" />
+                    <use href="#logo-pub" fill="#FFFFFF" />
+                </g>
             </svg>
         </a>
         
@@ -221,9 +267,56 @@
             
             <div class="container hero-content reveal">
                 <div class="hero-logo">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-                        <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="4"/>
-                        <path d="M40 25 V75 A15 15 0 0 0 70 60 A15 15 0 0 0 40 45" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+                    <svg class="chpub-logo-large" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" style="overflow: visible;">
+                        <defs>
+                            <linearGradient id="goldGradientHero" x1="0%" y1="100%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#8B6914" />
+                                <stop offset="35%" stop-color="#D4AF37" />
+                                <stop offset="50%" stop-color="#FAEBB2" />
+                                <stop offset="65%" stop-color="#D4AF37" />
+                                <stop offset="100%" stop-color="#8B6914" />
+                            </linearGradient>
+
+                            <path id="logo-C-lg" d="M 144 45 
+                                     A 65 65 0 1 0 144 115 
+                                     A 13 13 0 0 1 118 115 
+                                     A 45 45 0 1 1 118 45 
+                                     A 13 13 0 0 1 144 45 Z" />
+
+                            <path id="logo-h-lg" d="M 56 108 
+                                     L 56 42 
+                                     A 7 7 0 0 1 70 42 
+                                     L 70 60 
+                                     C 70 45, 108 45, 108 65 
+                                     L 108 108 
+                                     A 7 7 0 0 1 94 108 
+                                     L 94 65 
+                                     C 94 55, 70 55, 70 70 
+                                     L 70 108 
+                                     A 7 7 0 0 1 56 108 Z" />
+
+                            <g id="logo-pub-lg">
+                                <text x="148" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">p</text>
+                                <text x="148" y="87" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">u</text>
+                                <text x="148" y="112" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">b</text>
+                            </g>
+                        </defs>
+
+                        <g transform="translate(0, 8)" filter="drop-shadow(0 0 30px rgba(212, 175, 55, 0.4))">
+                            <g transform="translate(16, -16)" fill="none" stroke-width="0.8" opacity="0.1">
+                                <use href="#logo-C-lg" stroke="url(#goldGradientHero)" />
+                                <use href="#logo-h-lg" stroke="url(#goldGradientHero)" />
+                                <use href="#logo-pub-lg" stroke="#FFFFFF" />
+                            </g>
+                            <g transform="translate(8, -8)" fill="none" stroke-width="1.2" opacity="0.2">
+                                <use href="#logo-C-lg" stroke="url(#goldGradientHero)" />
+                                <use href="#logo-h-lg" stroke="url(#goldGradientHero)" />
+                                <use href="#logo-pub-lg" stroke="#FFFFFF" />
+                            </g>
+                            <use href="#logo-C-lg" fill="url(#goldGradientHero)" />
+                            <use href="#logo-h-lg" fill="url(#goldGradientHero)" />
+                            <use href="#logo-pub-lg" fill="#FFFFFF" />
+                        </g>
                     </svg>
                 </div>
                 
