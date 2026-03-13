@@ -105,4 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
             fbLink.style.display = 'none';
         }
     }
+
+    const igLink = document.getElementById('link-instagram');
+    if (igLink) {
+        if (CONFIG.agency.social.instagram) {
+            igLink.href = CONFIG.agency.social.instagram;
+            igLink.style.display = 'inline-flex';
+        } else {
+            igLink.style.display = 'none';
+        }
+    }
 });
