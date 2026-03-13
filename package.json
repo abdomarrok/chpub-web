@@ -1,0 +1,30 @@
+{
+  "name": "chpub-web",
+  "version": "1.0.0",
+  "description": "Ch.Pub — Agence Publicitaire | High-Performance SPA with 3D Configurator",
+  "author": "Ch.Pub — Agence Publicitaire",
+  "license": "PROPRIETARY",
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "build:js": "node build.js --js-only",
+    "build:css": "node build.js --css-only",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "terser": "^5.26.0",
+    "html-minifier": "^4.0.0"
+  },
+  "keywords": [
+    "advertising",
+    "alucobond",
+    "configurator",
+    "3d",
+    "devis",
+    "algeria"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abdomarrok/chpub-web.git"
+  }
+}
