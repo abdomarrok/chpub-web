@@ -45,26 +45,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ── Nav: scrolled class ── */
     const header = document.querySelector('.site-header');
-    const onScroll = debounce(() => {
-        header?.classList.toggle('scrolled', window.scrollY > 50);
-    }, 50);
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const updateHeader = () => {
+        header?.classList.toggle('scrolled', window.scrollY > 20);
+    };
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader(); // Initial check
 
     /* ── Mobile menu ── */
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const mainNav = document.getElementById('main-nav');
+    const menuBtn = document.querySelector('.menu-toggle');
+    const mainNav = document.querySelector('.main-nav');
 
     if (menuBtn && mainNav) {
         menuBtn.addEventListener('click', () => {
-            const isOpen = mainNav.classList.toggle('open');
-            menuBtn.setAttribute('aria-expanded', String(isOpen));
+            const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+            menuBtn.setAttribute('aria-expanded', String(!isOpen));
+            mainNav.classList.toggle('open');
+            document.body.classList.toggle('menu-open');
         });
+
+        // Close menu on link click
         mainNav.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                mainNav.classList.remove('open');
                 menuBtn.setAttribute('aria-expanded', 'false');
+                mainNav.classList.remove('open');
+                document.body.classList.remove('menu-open');
             });
         });
+    }
+
+    /* ── Magnetic Buttons ── */
+    const magneticBtns = document.querySelectorAll('.magnetic');
+    magneticBtns.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const bound = btn.getBoundingClientRect();
+            const x = e.clientX - bound.left - bound.width / 2;
+            const y = e.clientY - bound.top - bound.height / 2;
+            
+            btn.style.transform = `translate(${x * 0.3}px, ${y * 0.5}px)`;
+        });
+
+        btn.addEventListener('mouseleave', () => {
+            btn.style.transform = `translate(0, 0)`;
+        });
+    });
+
+    /* ── Portfolio Filtering ── */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+
+            portfolioItems.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.style.display = 'block';
+                    setTimeout(() => item.style.opacity = '1', 10);
+                } else {
+                    item.style.opacity = '0';
+                    setTimeout(() => item.style.display = 'none', 400);
+                }
+            });
+        });
+    });
+
+    /* ── Animated Counters ── */
+    const counters = document.querySelectorAll('.counter-value');
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const speed = 2000; // 2 seconds
+            const increment = target / (speed / 16); // 60fps approx
+
+            let count = 0;
+            const updateCount = () => {
+                if (count < target) {
+                    count += increment;
+                    counter.textContent = Math.ceil(count);
+                    requestAnimationFrame(updateCount);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+            updateCount();
+        });
+    };
+
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        const statsObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                animateCounters();
+                statsObserver.unobserve(statsSection);
+            }
+        }, { threshold: 0.5 });
+        statsObserver.observe(statsSection);
     }
 
     /* ── Populate contact from CONFIG ── */

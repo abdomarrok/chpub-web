@@ -178,164 +178,102 @@
     
     <!-- config.js MUST load first — all other scripts depend on global CONFIG -->
     <script src="js/config.js"></script>
+    <script src="js/preloader.js"></script>
     <script defer src="js/main.js"></script>
     <script defer src="js/configurator.js"></script>
     <script defer src="js/websites.js"></script>
     <script defer src="js/devis.js"></script>
 </head>
 <body>
-    <a href="#main-content" class="skip-to-content">Aller au contenu principal</a>
-
-    <header class="site-header" role="banner">
-        <a href="#" class="logo-container" aria-label="Accueil Ch.Pub">
-            <svg class="chpub-logo" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" style="overflow: visible;">
-                <defs>
-                    <linearGradient id="goldGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#8B6914" />
-                        <stop offset="35%" stop-color="#D4AF37" />
-                        <stop offset="50%" stop-color="#FAEBB2" />
-                        <stop offset="65%" stop-color="#D4AF37" />
-                        <stop offset="100%" stop-color="#8B6914" />
-                    </linearGradient>
-
-                    <path id="logo-C" d="M 144 45 
-                             A 65 65 0 1 0 144 115 
-                             A 13 13 0 0 1 118 115 
-                             A 45 45 0 1 1 118 45 
-                             A 13 13 0 0 1 144 45 Z" />
-
-                    <path id="logo-h" d="M 56 108 
-                             L 56 42 
-                             A 7 7 0 0 1 70 42 
-                             L 70 60 
-                             C 70 45, 108 45, 108 65 
-                             L 108 108 
-                             A 7 7 0 0 1 94 108 
-                             L 94 65 
-                             C 94 55, 70 55, 70 70 
-                             L 70 108 
-                             A 7 7 0 0 1 56 108 Z" />
-
-                    <g id="logo-pub">
-                        <text x="148" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">p</text>
-                        <text x="148" y="87" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">u</text>
-                        <text x="148" y="112" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">b</text>
-                    </g>
-                </defs>
-
-                <g transform="translate(0, 8)">
-                    <g transform="translate(16, -16)" fill="none" stroke-width="0.8" opacity="0.15">
-                        <use href="#logo-C" stroke="url(#goldGradient)" />
-                        <use href="#logo-h" stroke="url(#goldGradient)" />
-                        <use href="#logo-pub" stroke="#FFFFFF" />
-                    </g>
-                    <g transform="translate(8, -8)" fill="none" stroke-width="1.2" opacity="0.2">
-                        <use href="#logo-C" stroke="url(#goldGradient)" />
-                        <use href="#logo-h" stroke="url(#goldGradient)" />
-                        <use href="#logo-pub" stroke="#FFFFFF" />
-                    </g>
-                    <use href="#logo-C" fill="url(#goldGradient)" />
-                    <use href="#logo-h" fill="url(#goldGradient)" />
-                    <use href="#logo-pub" fill="#FFFFFF" />
-                </g>
+    <div id="preloader" aria-hidden="true">
+        <div class="preloader-content">
+            <svg class="loader-logo" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 144 45 A 65 65 0 1 0 144 115 A 13 13 0 0 1 118 115 A 45 45 0 1 1 118 45 A 13 13 0 0 1 144 45 Z" />
             </svg>
-        </a>
-        
-        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Ouvrir le menu" aria-expanded="false">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-        </button>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+    <a href="#main-content" class="skip-to-content">Aller au contenu principal</a>
+    <header class="site-header" role="banner">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="#" aria-label="Accueil Ch.Pub">
+                    <svg class="chpub-logo-sm" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                        <path d="M 144 45 A 65 65 0 1 0 144 115 A 13 13 0 0 1 118 115 A 45 45 0 1 1 118 45 A 13 13 0 0 1 144 45 Z" fill="var(--accent)" />
+                    </svg>
+                    <span class="logo-text font-display">Ch.Pub</span>
+                </a>
+            </div>
 
-        <nav id="main-nav" class="main-nav" role="navigation" aria-label="Menu principal">
-            <ul>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#alucobond">Alucobond</a></li>
-                <li><a href="#websites">Sites Web</a></li>
-                <li><a href="#devis">Devis</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+            <nav class="main-nav" role="navigation" aria-label="Navigation principale">
+                <ul class="nav-list">
+                    <li><a href="#hero" class="nav-link active">Accueil</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#alucobond" class="nav-link">Configurateur</a></li>
+                    <li><a href="#websites" class="nav-link">Sites Web</a></li>
+                    <li><a href="#contact" class="btn btn-primary btn-sm">Contact</a></li>
+                </ul>
+            </nav>
+
+            <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Ouvrir le menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </header>
 
     <main id="main-content">
         <!-- Section 1: Hero -->
         <section id="hero" aria-labelledby="hero-title" role="region" class="hero-section">
-            <div class="hero-shapes" aria-hidden="true">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
+            <div class="hero-glows" aria-hidden="true">
+                <div class="glow-blob glow-1"></div>
+                <div class="glow-blob glow-2"></div>
             </div>
             
-            <div class="container hero-content reveal">
-                <div class="hero-logo">
-                    <svg class="chpub-logo-large" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" style="overflow: visible;">
-                        <defs>
-                            <linearGradient id="goldGradientHero" x1="0%" y1="100%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#8B6914" />
-                                <stop offset="35%" stop-color="#D4AF37" />
-                                <stop offset="50%" stop-color="#FAEBB2" />
-                                <stop offset="65%" stop-color="#D4AF37" />
-                                <stop offset="100%" stop-color="#8B6914" />
-                            </linearGradient>
-
-                            <path id="logo-C-lg" d="M 144 45 
-                                     A 65 65 0 1 0 144 115 
-                                     A 13 13 0 0 1 118 115 
-                                     A 45 45 0 1 1 118 45 
-                                     A 13 13 0 0 1 144 45 Z" />
-
-                            <path id="logo-h-lg" d="M 56 108 
-                                     L 56 42 
-                                     A 7 7 0 0 1 70 42 
-                                     L 70 60 
-                                     C 70 45, 108 45, 108 65 
-                                     L 108 108 
-                                     A 7 7 0 0 1 94 108 
-                                     L 94 65 
-                                     C 94 55, 70 55, 70 70 
-                                     L 70 108 
-                                     A 7 7 0 0 1 56 108 Z" />
-
-                            <g id="logo-pub-lg">
-                                <text x="148" y="62" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">p</text>
-                                <text x="148" y="87" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">u</text>
-                                <text x="148" y="112" font-family="'Montserrat', 'Arial Black', sans-serif" font-weight="900" font-size="24">b</text>
-                            </g>
-                        </defs>
-
-                        <g transform="translate(0, 8)" filter="drop-shadow(0 0 30px rgba(212, 175, 55, 0.4))">
-                            <g transform="translate(16, -16)" fill="none" stroke-width="0.8" opacity="0.1">
-                                <use href="#logo-C-lg" stroke="url(#goldGradientHero)" />
-                                <use href="#logo-h-lg" stroke="url(#goldGradientHero)" />
-                                <use href="#logo-pub-lg" stroke="#FFFFFF" />
-                            </g>
-                            <g transform="translate(8, -8)" fill="none" stroke-width="1.2" opacity="0.2">
-                                <use href="#logo-C-lg" stroke="url(#goldGradientHero)" />
-                                <use href="#logo-h-lg" stroke="url(#goldGradientHero)" />
-                                <use href="#logo-pub-lg" stroke="#FFFFFF" />
-                            </g>
-                            <use href="#logo-C-lg" fill="url(#goldGradientHero)" />
-                            <use href="#logo-h-lg" fill="url(#goldGradientHero)" />
-                            <use href="#logo-pub-lg" fill="#FFFFFF" />
-                        </g>
-                    </svg>
+            <div class="container hero-container">
+                <div class="hero-content reveal">
+                    <p class="hero-tagline glow-text">Agence Publicitaire Premium</p>
+                    <div class="bilingual-headline">
+                        <p class="headline-ar font-arabic" dir="rtl" lang="ar">نصنع هويتك البصرية بتقنيات مبتكرة</p>
+                        <h1 id="hero-title" class="headline-fr font-display" lang="fr">L'innovation au service de votre image</h1>
+                    </div>
+                    <p class="hero-desc">Conception d'espaces, configurateurs 3D et solutions digitales sur-mesure pour propulser votre entreprise.</p>
+                    
+                    <div class="hero-actions">
+                        <a href="#alucobond" class="btn btn-primary magnetic">Lancer le Configurateur</a>
+                        <a href="#services" class="btn btn-outline magnetic">Nos Services</a>
+                    </div>
                 </div>
-                
-                <p class="agency-name">Ch.Pub — Agence Publicitaire</p>
-                
-                <div class="bilingual-headline">
-                    <p class="headline-ar font-arabic" dir="rtl" lang="ar">نصنع هويتك البصرية</p>
-                    <h1 id="hero-title" class="headline-fr font-display" lang="fr">Nous créons votre identité visuelle</h1>
+
+                <div class="hero-visual reveal" style="transition-delay: 300ms;">
+                    <div class="dashboard-frame glass-panel">
+                        <div class="frame-header">
+                            <div class="frame-dots"><span></span><span></span><span></span></div>
+                            <div class="frame-url">chpub-configurator.v3</div>
+                        </div>
+                        <div class="frame-content">
+                            <!-- Visual representation of the technique -->
+                            <div class="visual-mockup">
+                                <div class="mockup-sidebar"></div>
+                                <div class="mockup-main">
+                                    <div class="mockup-grid">
+                                        <div class="grid-item"></div>
+                                        <div class="grid-item highlight"></div>
+                                        <div class="grid-item"></div>
+                                    </div>
+                                    <div class="mockup-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <p class="subline">Alucobond &bull; Sites Web &bull; Impression &bull; Communication</p>
-                
-                <a href="#alucobond" class="btn btn-primary cta-main">Découvrir l'Alucobond</a>
             </div>
             
             <a href="#services" class="scroll-indicator" aria-label="Défiler vers le bas">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 5v14M19 12l-7 7-7-7"/>
-                </svg>
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
             </a>
         </section>
 
@@ -378,7 +316,73 @@
             </div>
         </section>
 
-        <!-- Section 3: Alucobond Configurator -->
+        <!-- Section 3: Portfolio -->
+        <section id="portfolio" aria-labelledby="portfolio-title" class="portfolio-section">
+            <div class="container">
+                <h2 id="portfolio-title" class="section-title reveal">Notre Portfolio</h2>
+                
+                <div class="portfolio-filters reveal">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="alucobond">Alucobond</button>
+                    <button class="filter-btn" data-filter="branding">Branding</button>
+                    <button class="filter-btn" data-filter="digital">Digital</button>
+                </div>
+
+                <div class="portfolio-grid reveal">
+                    <div class="portfolio-item glass-panel" data-category="alucobond">
+                        <div class="portfolio-img-wrapper">
+                            <img src="img/portfolio/alucobond-modern.png" alt="Projet Alucobond Moderne" loading="lazy">
+                            <div class="portfolio-overlay">
+                                <h3>Résidence Horizon</h3>
+                                <p>Habillage Alucobond Premium</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-item glass-panel" data-category="branding">
+                        <div class="portfolio-img-wrapper">
+                            <img src="img/portfolio/branding-luxury.png" alt="Branding de luxe" loading="lazy">
+                            <div class="portfolio-overlay">
+                                <h3>Luxury Jewel</h3>
+                                <p>Identité Visuelle & Signalétique</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-item glass-panel" data-category="digital">
+                        <div class="portfolio-img-wrapper">
+                            <img src="img/portfolio/digital-dashboard.png" alt="Interface Digitale" loading="lazy">
+                            <div class="portfolio-overlay">
+                                <h3>Smart Dashboard</h3>
+                                <p>Configurateur Web 3D v2</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3.5: Impact Stats -->
+        <section class="stats-section glass-panel">
+            <div class="container stats-grid">
+                <div class="stat-item reveal">
+                    <span class="counter-value" data-target="150">0</span>
+                    <span class="stat-label">Projets Terminés</span>
+                </div>
+                <div class="stat-item reveal" style="transition-delay: 100ms;">
+                    <span class="counter-value" data-target="12">0</span>
+                    <span class="stat-label">Années d'Expérience</span>
+                </div>
+                <div class="stat-item reveal" style="transition-delay: 200ms;">
+                    <span class="counter-value" data-target="50">0</span>
+                    <span class="stat-label">Partenaires de Confiance</span>
+                </div>
+                <div class="stat-item reveal" style="transition-delay: 300ms;">
+                    <span class="counter-value" data-target="98">0</span><span>%</span>
+                    <span class="stat-label">Satisfaction Client</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Alucobond Configurator -->
         <section id="alucobond" aria-labelledby="alucobond-title" role="region">
             <div class="container">
                 <h2 id="alucobond-title" class="section-title reveal">Configurateur Alucobond</h2>
