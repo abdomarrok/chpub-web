@@ -132,6 +132,35 @@
     box-shadow: 0 8px 25px rgba(139, 38, 53, 0.4);
 }
 
+/* Neon Button Variant */
+.btn-neon {
+    background: linear-gradient(135deg, transparent, rgba(0, 191, 255, 0.1));
+    border-color: var(--neon-blue);
+    border-width: 2px;
+    color: var(--neon-blue);
+    box-shadow: var(--neon-glow-blue);
+    position: relative;
+}
+
+.btn-neon::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(90deg, var(--neon-blue-dark), var(--neon-blue-light), var(--neon-blue-dark));
+    border-radius: 8px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.btn-neon:hover, .btn-neon:focus-visible {
+    color: var(--neon-blue-light);
+    border-color: var(--neon-blue-light);
+    box-shadow: var(--neon-glow-blue-intense);
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+}
+
 .btn-outline {
     border-color: var(--border);
     background: var(--glass-bg);

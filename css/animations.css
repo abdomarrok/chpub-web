@@ -33,3 +33,45 @@
         transform: translate(10%, 10%) scale(1.1);
     }
 }
+
+/* Neon Glow Animations */
+@keyframes neon-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 191, 255, 0.5), 0 0 30px rgba(0, 153, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(0, 191, 255, 0.8), 0 0 60px rgba(0, 153, 255, 0.5);
+    }
+}
+
+@keyframes neon-text-glow {
+    0%, 100% {
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+    }
+    50% {
+        color: var(--neon-blue-light);
+        text-shadow: 0 0 20px rgba(0, 191, 255, 0.8), 0 0 30px rgba(0, 153, 255, 0.6);
+    }
+}
+
+@keyframes neon-border-glow {
+    0%, 100% {
+        border-color: var(--neon-blue);
+    }
+    50% {
+        border-color: var(--neon-blue-light);
+    }
+}
+
+.neon-glow {
+    animation: neon-glow 2s ease-in-out infinite;
+}
+
+.neon-text-glow {
+    animation: neon-text-glow 2s ease-in-out infinite;
+}
+
+.neon-border-glow {
+    animation: neon-border-glow 2s ease-in-out infinite;
+}
